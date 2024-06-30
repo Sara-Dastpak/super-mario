@@ -1,4 +1,4 @@
-#include "Position.hpp"
+#include "Position.h"
 
 // Default constructor
 Position::Position() : x(0), y(0) {}
