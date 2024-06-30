@@ -12,6 +12,7 @@ public:
     // Mutators
     void setX(int x);
     void setY(int y);
+    void move(int deltaX, int deltaY);
 private:
     int x;
     int y;
