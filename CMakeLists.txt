@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add compiler flags for MSVC
 if (MSVC)
     add_compile_options(/Zc:__cplusplus)
+    add_compile_options(/permissive-)  # Add /permissive- option here
 endif()
 
 # Find the Qt package
@@ -85,4 +86,3 @@ install(TARGETS SuperMario
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(SuperMario)
 endif()
-

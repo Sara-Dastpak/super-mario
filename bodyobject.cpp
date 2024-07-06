@@ -9,3 +9,9 @@ BodyObject::BodyObject(int width, int height, Position position, QGraphicsPixmap
 BodyObject::~BodyObject() {
     delete image;
 }
+BodyObject::BodyObject(const BodyObject& other)
+    : QObject(other.parent()),   // Initialize QObject base class (if applicable)
+    width(other.width),        // Copy member variables
+    height(other.height),
+    position(other.position),
+    image(other.image){} // Deep copy QGraphicsPixmapItem

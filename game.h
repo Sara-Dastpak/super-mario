@@ -6,35 +6,24 @@
 #include <vector>
 #include <QObject>
 #include <QGraphicsScene>
-#include "player.h"
 #include "platform.h"
+#include "player.h"
 #include "decorator.h"
-
-class Game : public QObject
-{
-    Q_OBJECT
-
+class Game : public QObject{
 public:
-    explicit Game(QObject *parent = nullptr);
-    ~Game();
-
-    void setScene(QGraphicsScene* scene);
-    void setPlayer(Player* player);
-    void setPlatforms(const std::vector<Platform>& platforms);
-    void setDistance(int distance);
-
+    QGraphicsView &view;
+    QGraphicsScene &scene;
+    std::vector <Platform> platforms;
+    std::vector <Decorator> decorators;
+    Player &player;
+    int amountDistance;
+public:
+    Game (QGraphicsView &view, QGraphicsScene &scene, std::vector <Platform> platform, std::vector <Decorator> decorator, Player &player, int amountDistance);
+    void handleGameOver();
+    void handleVictory();
 signals:
-    void gameOver();
     void victory();
 
-public slots:
-    void checkGameState();
-
-private:
-    QGraphicsScene* scene;
-    Player* player;
-    std::vector<Platform> platforms;
-    int distance;
 };
 
 #endif // GAME_H

@@ -1,24 +1,19 @@
 #include "platform.h"
+#include "bodyobject.h"
+#include "position.h"
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QPixmap>
 
-Platform::Platform(int width, int height, Position position, const QString& imagePath, QGraphicsPixmapItem *image)
+Platform::Platform(int width, int height, const Position& position, const QString& imagePath)
     : BodyObject(width, height, position, image), imagePath(imagePath) {}
-int Platform::getHeight(){
-    return height;
-}
-int Platform::getWidth(){
-    return width;
-}
-void Platform::draw(QGraphicsScene &scene) {
-    if (!image) {
+void Platform::draw(QGraphicsScene &scene) const {
+    /*if (!image) {
         image = new QGraphicsPixmapItem(QPixmap(imagePath));
-    }
+    }*/
     image->setPos(position.x, position.y);
     scene.addItem(image);
 }
-Position Platform::getPosition(){
-    return position;
-}
-
+Platform::Platform(const Platform& other)
+    : BodyObject(other),            // Initialize base class copy constructor
+    imagePath(other.imagePath){}

@@ -1,89 +1,98 @@
-#include "MainWindow.h"
-#include <QGraphicsPixmapItem>
-#include <QVBoxLayout>
-#include "ui_mainwindow.h"
+#include "mainwindow.h"
+#include <iostream>
 #include <QMessageBox>
-
+#include <vector>
+#include <QString>
+#include "platform.h"
+#include "decorator.h"
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), scene(new QGraphicsScene(this)), view(new QGraphicsView(scene, this)), player(nullptr), game(new Game(this))
+    : QMainWindow(parent), scene(new QGraphicsScene(this)), view(new QGraphicsView(scene)), player(nullptr), game(nullptr)
 {
-    QVBoxLayout *layout = new QVBoxLayout;
-    QWidget *centralWidget = new QWidget(this);
-    layout->addWidget(view);
-    centralWidget->setLayout(layout);
-    setCentralWidget(centralWidget);
-
     setupScene();
-    drawObjects();
-
-    // Connect game signals to handle game over and victory
-    connect(game, &Game::gameOver, this, &MainWindow::handleGameOver);
-    connect(game, &Game::victory, this, &MainWindow::handleVictory);
+    setupGame();
 }
 
 MainWindow::~MainWindow()
 {
+    delete view;
+    delete scene;
     delete player;
     delete game;
-    for (auto& platform : platforms) {
-        delete platform.image;
-    }
-    for (auto& decoration : decorations) {
-        delete decoration.image;
-    }
 }
 
 void MainWindow::setupScene()
 {
-    scene->setSceneRect(0, 0, 800, 600);
+    // Set up the scene parameters (if needed)
+    scene->setSceneRect(0, 0, 800, 600); // Adjust as necessary
 
-    platforms = {
-        Platform(200, 20, Position(0, 400), ":/platform/assets/platform.png"),
-        Platform(100, 20, Position(300, 400), ":/platformSmallTall/assets/platformSmallTall.png")
-    };
+    // Set up the view parameters (if needed)
+    view->setFixedSize(800, 600); // Adjust as necessary
 
-    decorations = {
-        Decorator(800, 600, Position(0, 0), ":/background/assets/background.png"),
-        Decorator(100, 100, Position(200, 300), ":/hills/assets/hills.png")
-    };
-
-    player = new Player(50, 50, Position(0, 350), new QGraphicsPixmapItem());
-    player->setPlatforms(platforms);
-    //view->setFocusItem(player->image);
-    view->setFocusItem(player->getImage());
-
-    // Set player in game
-    game->setPlayer(player);
+    // Add the view to the main window
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(view);
+    QWidget *centralWidget = new QWidget;
+    centralWidget->setLayout(layout);
+    setCentralWidget(centralWidget);
 }
 
 void MainWindow::drawObjects()
 {
-    for (auto& platform : platforms) {
+    // Draw platforms
+    for (const auto &platform : platforms)
+    {
         platform.draw(*scene);
     }
 
-    for (auto& decoration : decorations) {
-        decoration.draw(*scene);
+    // Draw player (assuming player is set elsewhere)
+    if (player)
+    {
+        scene->addItem(player->image); // Assuming getImage() returns QGraphicsPixmapItem*
     }
+}
 
-    if (player) {
-        scene->addItem(player->getImage());
-        player->getImage()->setPos(player->position.x, player->position.y);
-        //if (player) {
-        //scene->addItem(player->image);
-        // player->image->setPos(player->position.x, player->position.y);
+void MainWindow::setupGame()
+{
+    // Example initialization of platforms, decorators, player, and game
+    // Initialize platforms
+    std::vector <Platform> platforms;
+    Platform platform1(200, 20, Position(0, 400), ":/platform/assets/platform.png");
+    Platform platform2(100, 20, Position(300, 400), ":/platformSmallTall/assets/platformSmallTall.png");
+    platforms.push_back(platform1);
+    platforms.push_back(platform2);
+    std::vector <Decorator> decorators;
+    // Initialize decorators
+    Decorator decorator1(800, 600, Position(0, 0), ":/background/assets/background.png");
+    Decorator decorator2(100, 100, Position(200, 300), ":/hills/assets/hills.png");
+    decorators.push_back(decorator1);
+    decorators.push_back(decorator2);
+    player = new Player(50, 50, Position(100, 400), new QGraphicsPixmapItem(QPixmap(":/spriteStandRight/assets/spriteStandRight.png")), 5); // Adjust as necessary
+    game = new Game(*view, *scene, platforms, decorators, *player, 1000); // Adjust as necessary
 
-    }
+    // Connect signals and slots
+    //connect(game, &Game::gameOver, this, &MainWindow::handleGameOver);
+    //connect(game, &Game::victory, this, &MainWindow::handleVictory);
+
+    // Start drawing objects
+    drawObjects();
 }
 
 void MainWindow::handleGameOver()
 {
-    QMessageBox::information(this, "Game Over", "You fell off the platforms!");
-    // Reset game or show appropriate UI
+    //std::cout << "Game Over: Player fell off the platform!" << std::endl;
+    //QMessageBox::information(nullptr, "Game Over", "Game Over: Player fell off the platform!");
+    // Optionally, reset the game state or perform other actions upon game over
 }
 
 void MainWindow::handleVictory()
 {
-    QMessageBox::information(this, "Victory", "You reached the destination!");
-    // Reset game or show appropriate UI
+    //std::cout << "Congratulations! You won the game!" << std::endl;
+    //QMessageBox::information(nullptr, "Victory", "Congratulations! You won the game!");
+    // Optionally, reset the game state or perform other actions upon victory
 }
+
+//Game game(view, scene, platforms, decorators, player, distance);
+//QObject::connect(&game, &Game::victory, [&]() {
+    // Perform actions upon victory
+    //QMessageBox::information(nullptr, "Victory", "Congratulations! You won the game!");
+//});

@@ -5,13 +5,11 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QVBoxLayout>
+#include <vector>
 #include "platform.h"
 #include "decorator.h"
 #include "player.h"
 #include "game.h"
-#include "position.h"
-#include "bodyobject.h"
-#include <vector>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -24,13 +22,14 @@ private:
     QGraphicsScene *scene;
     QGraphicsView *view;
     std::vector<Platform> platforms;
-    std::vector<Decorator> decorations;
+    std::vector<Decorator> decorators;
     Player *player;
     Game *game;
 
     void setupScene();
     void drawObjects();
-    //void setupGame();
+    void setupGame();
+
 private slots:
     void handleGameOver();
     void handleVictory();

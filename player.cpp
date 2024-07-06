@@ -2,9 +2,17 @@
 #include <QKeyEvent>
 #include "position.h"
 #include "platform.h"
+#include "bodyobject.h"
 #include <vector>
+#include <QObject>   // Ensure QObject is included
+#include <QTimer>    // For QTimer
+#include <QGraphicsPixmapItem>  // If QGraphicsPixmapItem is used
+#include <QString>
+#include <iostream>
+#include <QBrush>
+#include <QGraphicsRectItem>
 Player::Player(int width, int height, Position position, QGraphicsPixmapItem *image, int speed)
-    : BodyObject(width, height, position, image), speed(speed), currentState(StandRight), movementTimer(new QTimer(this)) {
+    : BodyObject(width, height, position, image), speed(speed), currentState(StandRight) {
 
     // Load images
     standLeftImage = QPixmap(":/spriteStandLeft/assets/spriteStandLeft.png");
@@ -15,29 +23,40 @@ Player::Player(int width, int height, Position position, QGraphicsPixmapItem *im
     jumpRightImage = QPixmap(":/spriteStandRight/assets/spriteStandRight.png");
 
     // Set initial image
-    this->image->setPixmap(standRightImage);
+    //this->image->setPixmap(standRightImage);
 
-    connect(movementTimer, &QTimer::timeout, this, &Player::updatePosition);
-    movementTimer->start(30);
+    //connect(movementTimer, &QTimer::timeout, this, &Player::updatePosition);
+    //QObject::connect(movementTimer, &QTimer::timeout, this, &Player::updatePosition);
+    //movementTimer->start(30);
 }
+void Player::draw(QGraphicsScene& scene)const{
+    QGraphicsRectItem* rect = new QGraphicsRectItem(position.x, position.y, width, height);
 
+    // Set the color to red
+    QBrush brush(Qt::red);
+    rect->setBrush(brush);
+
+    // Add the rectangle to the scene
+    scene.addItem(rect);
+}
 void Player::setState(State state) {
-    if (currentState != state) {
-        currentState = state;
-        updateImage();
-    }
+    //if (currentState != state) {
+        //currentState = state;
+        //updateImage();
+    //}
+    currentState = state;
 }
 
 void Player::updateImage() {
-    switch (currentState) {
-    case StandLeft:
-        image->setPixmap(standLeftImage);
-        break;
-    case StandRight:
-        image->setPixmap(standRightImage);
-        break;
-    case RunLeft:
-        image->setPixmap(runLeftImage);
+    //switch (currentState) {
+    //case StandLeft:
+        //image->setPixmap(standLeftImage);
+        //break;
+    //case StandRight:
+        //image->setPixmap(standRightImage);
+        //break;
+    //case RunLeft:
+        /*image->setPixmap(runLeftImage);
         break;
     case RunRight:
         image->setPixmap(runRightImage);
@@ -48,16 +67,17 @@ void Player::updateImage() {
     case JumpingRight:
         image->setPixmap(jumpRightImage);
         break;
-    }
+    }*/
+
 }
 
-void Player::handleGravity(const std::vector<Platform>& platforms) {
+void Player::handleGravity(std::vector<Platform>& platforms) {
     bool onPlatform = false;
 
     for (const auto& platform : platforms) {
-        if (isCollidingWithPlatform(platform)) {
+        if (isCollidingWithPlatform(platforms)) {  // Pass entire platforms vector here
             onPlatform = true;
-            position.y = platform.getPosition().y - height;
+            position.y = platform.position.y - height;
             velocity.y = 0;
             break;
         }
@@ -72,16 +92,17 @@ void Player::handleGravity(const std::vector<Platform>& platforms) {
         }
     }
 }
+
 void Player::handleMovement() {
     if (currentState == RunLeft || currentState == JumpingLeft) {
-        position.x -= speed;
+        position.x = position.x - speed;
     } else if (currentState == RunRight || currentState == JumpingRight) {
-        position.x += speed;
+        position.x = position.x + speed;
     }
     image->setPos(position.x, position.y);
 }
 
-void Player::updatePosition() {
+void Player::updatePosition(std::vector<Platform>& platforms) {
     handleMovement();
     handleGravity(platforms);
 }
@@ -130,9 +151,9 @@ void Player::keyReleaseEvent(QKeyEvent *event) {
     }
 }
 
-bool Player::isCollidingWithPlatform(const std::vector<Platform>& platforms) {
-    for (const auto& platform : platforms) {
-        QRectF platformRect(platform.getPosition().x, platform.getPosition().y, platform.getWidth(), platform.getHeight());
+bool Player::isCollidingWithPlatform(std::vector<Platform>& platforms) {
+    for (auto& p : platforms) {
+        QRectF platformRect(p.position.x, p.position.y, p.width, p.height);
         QRectF playerRect(position.x, position.y, width, height);
 
         if (playerRect.intersects(platformRect)) {

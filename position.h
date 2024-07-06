@@ -5,15 +5,7 @@
 
 class Position {
 public:
-    Position(int x = 0, int y = 0);
-
-    int getX() const;
-    int getY() const;
-    void setX(int x);
-    void setY(int y);
-
-    void moveBy(int dx, int dy);
-    bool isWithinBounds(int minX, int maxX, int minY, int maxY) const;
+    Position(int xx = 0, int yy = 0);
     int x;
     int y;
 };

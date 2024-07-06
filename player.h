@@ -10,8 +10,9 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <vector>
+#include <QObject>   // Ensure QObject is included
 
-class Player : public BodyObject {
+class Player : public BodyObject{
     Q_OBJECT
 
 public:
@@ -19,30 +20,27 @@ public:
 
     Player(int width, int height, Position position, QGraphicsPixmapItem *image = nullptr, int speed = 5);
 
+    void draw(QGraphicsScene& scene) const;
     void setState(State state);
-    void handleGravity(const std::vector<Platform>& );
+    void handleGravity(std::vector<Platform>& platforms );
+    void updatePosition(std::vector<Platform>& platforms);
     void handleMovement();
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
     void updateImage();
-    bool isCollidingWithPlatform(const std::vector<Platform>& platforms);
-
-private slots:
-    void updatePosition();
-
+    bool isCollidingWithPlatform(std::vector<Platform>& platforms);
 private:
     int speed;
     Position velocity;
     State currentState;
     QTimer *movementTimer;
-
+    std::vector<Platform> platforms;
     QPixmap standLeftImage;
     QPixmap standRightImage;
     QPixmap runLeftImage;
     QPixmap runRightImage;
     QPixmap jumpLeftImage;
     QPixmap jumpRightImage;
-
 
 };
 
