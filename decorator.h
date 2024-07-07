@@ -12,8 +12,10 @@ public:
 
     void draw(QGraphicsScene &scene) const override;
     Decorator(const Decorator& other);
+    ~Decorator();
 private:
     QString imagePath;
+    mutable QGraphicsPixmapItem* image;
 };
 
 #endif // DECORATOR_H

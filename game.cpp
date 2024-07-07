@@ -20,6 +20,6 @@ void Game::handleGameOver(){
 void Game::handleVictory(){
     if (amountDistance == 700) { // Change 1000 to the specific distance you want to check for
         std::cout << "Congratulations! You won the game!" << std::endl;
-        emit victory(); // Emit the victory signal
+        //emit victory(); // Emit the victory signal
     }
 }

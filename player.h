@@ -18,7 +18,7 @@ class Player : public BodyObject{
 public:
     enum State { StandLeft, StandRight, RunLeft, RunRight, JumpingLeft, JumpingRight };
 
-    Player(int width, int height, Position position, QGraphicsPixmapItem *image = nullptr, int speed = 5);
+    Player(int width, int height, Position position, int speed = 5);
 
     void draw(QGraphicsScene& scene) const;
     void setState(State state);

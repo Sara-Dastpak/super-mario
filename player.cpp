@@ -11,7 +11,7 @@
 #include <iostream>
 #include <QBrush>
 #include <QGraphicsRectItem>
-Player::Player(int width, int height, Position position, QGraphicsPixmapItem *image, int speed)
+Player::Player(int width, int height, Position position, int speed)
     : BodyObject(width, height, position, image), speed(speed), currentState(StandRight) {
 
     // Load images
@@ -40,23 +40,23 @@ void Player::draw(QGraphicsScene& scene)const{
     scene.addItem(rect);
 }
 void Player::setState(State state) {
-    //if (currentState != state) {
-        //currentState = state;
-        //updateImage();
-    //}
+    if (currentState != state) {
+        currentState = state;
+        updateImage();
+    }
     currentState = state;
 }
 
 void Player::updateImage() {
-    //switch (currentState) {
-    //case StandLeft:
-        //image->setPixmap(standLeftImage);
-        //break;
-    //case StandRight:
-        //image->setPixmap(standRightImage);
-        //break;
-    //case RunLeft:
-        /*image->setPixmap(runLeftImage);
+    switch (currentState) {
+    case StandLeft:
+        image->setPixmap(standLeftImage);
+        break;
+    case StandRight:
+        image->setPixmap(standRightImage);
+        break;
+    case RunLeft:
+        image->setPixmap(runLeftImage);
         break;
     case RunRight:
         image->setPixmap(runRightImage);
@@ -67,7 +67,7 @@ void Player::updateImage() {
     case JumpingRight:
         image->setPixmap(jumpRightImage);
         break;
-    }*/
+    }
 
 }
 

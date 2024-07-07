@@ -12,9 +12,11 @@ public:
     //int getHeight();
     void draw(QGraphicsScene &scene) const override;
     Platform(const Platform& other);
+    ~Platform();
     //Position getPosition();
 private:
     QString imagePath;
+    mutable QGraphicsPixmapItem* image;
 };
 
 #endif // PLATFORM_H

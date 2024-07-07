@@ -12,9 +12,9 @@ public:
     int width;
     int height;
     Position position;
-    QGraphicsPixmapItem* image;
+    QGraphicsPixmapItem *image;
 
-    BodyObject(int width, int height, Position position, QGraphicsPixmapItem* image = nullptr);
+    BodyObject(int width, int height, Position position,QGraphicsPixmapItem* image = nullptr);
     ~BodyObject();
     BodyObject(const BodyObject& other);
 
