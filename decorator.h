@@ -9,10 +9,8 @@
 class Decorator : public BodyObject {
 public:
     Decorator(int width, int height,const Position& position, const QString& imagePath);
-
-    void draw(QGraphicsScene &scene) const override;
     Decorator(const Decorator& other);
-    ~Decorator();
+    void draw(QGraphicsScene &scene) const override;
 private:
     QString imagePath;
     mutable QGraphicsPixmapItem* image;

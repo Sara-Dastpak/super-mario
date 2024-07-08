@@ -10,6 +10,7 @@
 #include "player.h"
 #include "decorator.h"
 class Game : public QObject{
+     Q_OBJECT
 public:
     QGraphicsView &view;
     QGraphicsScene &scene;
@@ -22,6 +23,7 @@ public:
     void handleGameOver();
     void handleVictory();
 signals:
+    void gameOver();
     void victory();
 
 };

@@ -5,11 +5,14 @@
 #include <QGraphicsScene>
 #include <QPixmap>
 
+//constructor
 Platform::Platform(int width, int height, const Position& position, const QString& imagePath)
     : BodyObject(width, height, position), imagePath(imagePath) {}
-Platform::~Platform() {
-    //delete image; // Clean up dynamically allocated image
-}
+//copy constructor
+Platform::Platform(const Platform& other)
+    : BodyObject(other),
+    imagePath(other.imagePath), image(nullptr){}
+//draw platform on screen
 void Platform::draw(QGraphicsScene &scene) const {
     if (!image) {
         QPixmap pixmap(imagePath);
@@ -23,6 +26,3 @@ void Platform::draw(QGraphicsScene &scene) const {
     image->setPos(position.x, position.y);
 }
 
-Platform::Platform(const Platform& other)
-    : BodyObject(other),            // Initialize base class copy constructor
-    imagePath(other.imagePath), image(nullptr){}
